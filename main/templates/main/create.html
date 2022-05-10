@@ -1,0 +1,79 @@
+{% extends 'main/template.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block body %}
+<main>
+    <div class="row g-5">
+        <div class="col-md-7 col-lg-8">
+            <form class="needs-validation" novalidate="" method="post">
+                {% csrf_token %}
+                <div class="row g-3">
+                    {{ form.title }}
+                    <div class="invalid-feedback">
+                        Название анкеты обязательно
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="block">
+                        <input type="text" class="form-control" placeholder="Вопрос блока" value="" required="">
+                        <div class="invalid-feedback">
+                            Вопрос блока обязателен
+                        </div>
+                        <div class="answers">
+                            <input type="text" class="form-control" placeholder="1 ответ" value="" required="">
+                            <div class="invalid-feedback">
+                                Ответ блока обязателен
+                            </div><input type="text" class="form-control" placeholder="2 ответ" value="" required="">
+                            <div class="invalid-feedback">
+                                Ответ блока обязателен
+                            </div>
+                        </div>
+                        <button class="btn-answers w-100 btn btn-outline-primary" type="button">Добавить ответ</button>
+                        <hr class="my-4">
+                    </div>
+
+                    <button class="btn-blocks w-100 btn btn-primary btn-lg" type="button">Добавить блок</button>
+
+                    <hr class="my-4">
+
+                    <button class="w-100 btn btn-success btn-lg" type="submit">Создать</button>
+            </form>
+        </div>
+    </div>
+</main>
+<script>
+    document.querySelector('.btn-answers').addEventListener('click', e => {
+        const block = e.target.closest('.block')
+        let counter = block.querySelectorAll('.answers > .form-control').length + 1
+        const answer = `<input type="text" class="form-control" placeholder="${counter} ответ" value="" required="">
+            <div class="invalid-feedback">Ответ блока обязателен</div>`
+        block.querySelector('.answers').innerHTML += answer
+    })
+
+    document.querySelector('.btn-blocks').addEventListener('click', e => {
+        const body = e.target.closest('.row')
+        const block = document.createElement('div')
+        block.className = 'block'
+        block.innerHTML = `<input type="text" class="form-control" placeholder="Вопрос блока" value="" required="">
+                        <div class="invalid-feedback">
+                            Вопрос блока обязателен
+                        </div>
+                        <div class="answers">
+                            <input type="text" class="form-control" placeholder="1 ответ" value="" required="">
+                            <div class="invalid-feedback">
+                                Ответ блока обязателен
+                            </div><input type="text" class="form-control" placeholder="2 ответ" value="" required="">
+                            <div class="invalid-feedback">
+                                Ответ блока обязателен
+                            </div>
+                        </div>
+                        <button class="btn-answers w-100 btn btn-outline-primary" type="button">Добавить ответ</button>
+                        <hr class="my-4">`
+        document.querySelector('.block').append(block)
+    })
+</script>
+{% endblock %}

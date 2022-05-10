@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header class="d-flex justify-content-center py-3">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="/" class="nav-link">Анкеты</a></li>
+                <li class="nav-item"><a href="/create" class="nav-link">Создать</a></li>
+                <li class="nav-item"><a href="/profile" class="nav-link">Мои анкеты</a></li>
+                <li class="nav-item"><a href="/login" class="nav-link">Выйти</a></li>
+            </ul>
+        </header>
+    </div>
+    <div class="container">
+        {% block body %}{% endblock %}
+    </div>
+    <script>
+        const pathname = window.location.pathname
+        switch (pathname) {
+            case '/':
+                document.querySelector(".nav-link[href='/']").classList.add('active')
+                break
+            case '/create':
+                document.querySelector(".nav-link[href='/create']").classList.add('active')
+                break
+            case '/profile':
+                document.querySelector(".nav-link[href='/profile']").classList.add('active')
+                break
+            case '/login':
+                document.querySelector(".nav-link[href='/login']").classList.add('active')
+                break
+        }
+    </script>
+</body>
+
+</html>
