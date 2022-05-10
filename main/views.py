@@ -36,3 +36,11 @@ def login(request):
     return render(request, 'main/login.html', {
         'title': 'Вход',
     })
+
+
+def question(request, id):
+    question = Questions.objects.get(id=id)
+    return render(request, 'main/question.html', {
+        'title': 'Анкета',
+        'question': question
+    })

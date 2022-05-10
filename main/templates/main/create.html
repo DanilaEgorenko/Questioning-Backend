@@ -19,15 +19,17 @@
                     <hr class="my-4">
 
                     <div class="block">
-                        <input type="text" class="form-control" placeholder="Вопрос блока" value="" required="">
+                        <input type="text" class="question form-control" placeholder="Вопрос блока" value=""
+                            required="">
                         <div class="invalid-feedback">
                             Вопрос блока обязателен
                         </div>
                         <div class="answers">
-                            <input type="text" class="form-control" placeholder="1 ответ" value="" required="">
+                            <input type="text" class="answer form-control" placeholder="1 ответ" value="" required="">
                             <div class="invalid-feedback">
                                 Ответ блока обязателен
-                            </div><input type="text" class="form-control" placeholder="2 ответ" value="" required="">
+                            </div><input type="text" class="answer form-control" placeholder="2 ответ" value=""
+                                required="">
                             <div class="invalid-feedback">
                                 Ответ блока обязателен
                             </div>
@@ -40,6 +42,9 @@
 
                     <hr class="my-4">
 
+                    {{ form.author }}
+                    {{ form.body }}
+
                     <button class="w-100 btn btn-success btn-lg" type="submit">Создать</button>
             </form>
         </div>
@@ -49,7 +54,7 @@
     document.querySelector('.btn-answers').addEventListener('click', e => {
         const block = e.target.closest('.block')
         let counter = block.querySelectorAll('.answers > .form-control').length + 1
-        const answer = `<input type="text" class="form-control" placeholder="${counter} ответ" value="" required="">
+        const answer = `<input type="text" class="answer form-control" placeholder="${counter} ответ" value="" required="">
             <div class="invalid-feedback">Ответ блока обязателен</div>`
         block.querySelector('.answers').innerHTML += answer
     })
@@ -58,22 +63,40 @@
         const body = e.target.closest('.row')
         const block = document.createElement('div')
         block.className = 'block'
-        block.innerHTML = `<input type="text" class="form-control" placeholder="Вопрос блока" value="" required="">
+        block.innerHTML = `<input type="text" class="question form-control" placeholder="Вопрос блока" value="" required="">
                         <div class="invalid-feedback">
                             Вопрос блока обязателен
                         </div>
                         <div class="answers">
-                            <input type="text" class="form-control" placeholder="1 ответ" value="" required="">
+                            <input type="text" class="answer form-control" placeholder="1 ответ" value="" required="">
                             <div class="invalid-feedback">
                                 Ответ блока обязателен
-                            </div><input type="text" class="form-control" placeholder="2 ответ" value="" required="">
+                            </div><input type="text" class="answer form-control" placeholder="2 ответ" value="" required="">
                             <div class="invalid-feedback">
                                 Ответ блока обязателен
                             </div>
                         </div>
                         <button class="btn-answers w-100 btn btn-outline-primary" type="button">Добавить ответ</button>
                         <hr class="my-4">`
-        document.querySelector('.block').append(block)
+        document.querySelector('.block').after(block)
+    })
+
+    document.querySelector('.btn-success').addEventListener('click', e => {
+        e.preventDefault()
+        let value = ''
+        const blocks = [...document.querySelectorAll('.block')]
+
+        blocks.map(block => {
+            value += block.querySelector('.question').value + '\n'
+            const answers = [...block.querySelectorAll('.answer')]
+            answers.map(answer => {
+                value += answer.value + '/'
+            })
+            value += '\n'
+        })
+        document.querySelector('.form-user-data').value = "{{request.user.username}}"
+        document.querySelector('.form-body-data').value = value
+        document.querySelector('form').submit()
     })
 </script>
 {% endblock %}
