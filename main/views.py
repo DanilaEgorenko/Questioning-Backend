@@ -27,12 +27,21 @@ def create(request):
 
 
 def profile(request):
+    questions = Questions.objects.filter(author=request.user.username)
     return render(request, 'main/profile.html', {
         'title': 'Мои анкеты',
+        'questions': questions
     })
 
 
-def login(request):
-    return render(request, 'main/login.html', {
-        'title': 'Вход',
+def question(request, id):
+    question = Questions.objects.get(id=id)
+    return render(request, 'main/question.html', {
+        'title': 'Анкета',
+        'question': question
     })
+
+
+def delete(request, id):
+    u = Questions.objects.get(id=id).delete()
+    return redirect('/profile')

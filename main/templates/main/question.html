@@ -1,0 +1,42 @@
+{% extends 'main/template.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block body %}
+<h2>{{ question.title }}</h2>
+<p class="mb-0 opacity-75">Автор: {{ question.author }}</p>
+<div class="row g-5">
+    <div class="col-md-7 col-lg-8">
+        <form class="needs-validation" novalidate="" method="post">
+            <div class="row g-3">
+                <button class="w-100 btn btn-success btn-lg" type="submit">Отправить</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    const req = `{{question.body}}`.split('\n')
+    for (let i = 0; i < req.length; i += 2) {
+        const block = document.createElement('div')
+        block.className = 'block'
+        let html = `
+        <hr class="my-4">
+            <h3 class="question">${req[i]}</h3>
+            <div class="answers">
+                <div class="list-group mx-0">`
+        for (const item of req[i + 1].split('/').filter(Boolean)) {
+            html += `<label class="list-group-item d-flex gap-2">
+                        <input class="form-check-input flex-shrink-0" type="radio" name="radio${i + 1}">
+                        <span>${item}</span>
+                    </label>`
+        }
+        html += `</div>
+            </div>
+            <hr class="my-4">`
+        block.innerHTML += html
+        document.querySelector('.btn-success').before(block)
+    }
+</script>
+{% endblock %}
