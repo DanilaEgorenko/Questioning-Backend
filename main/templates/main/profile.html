@@ -5,18 +5,32 @@
 {% endblock %}
 
 {% block body %}
-{% for el in questions %}
-<div class="list-group">
-    <a href="/question/{{ el.id }}" class="list-group-item list-group-item-action d-flex gap-3 py-3"
-        aria-current="true">
-        <div class="d-flex gap-2 w-100 justify-content-between">
-            <h6 class="mb-0">{{ el.title }}</h6>
+<form action="/profile" class="d-flex w-50 mx-auto align-items-center">
+    <input class="form-control" type="search" placeholder="Найти..." name="search" value="{{search}}" maxlength="40"
+        autofocus>
+    <button class="btn btn-primary mx-2" type="submit">Поиск</button>
+</form>
+<div class="wrapper">
+    {% for el in questions %}
+    <div class="list-group">
+        <a href="/question/{{ el.id }}" class="list-group-item list-group-item-action" aria-current="true">
+            <div class="flex-title">
+                <img src="{{el.preview}}" alt="Превью {{el.title}}">
+                <h6 class="mb-0">{{ el.title }}</h6>
+            </div>
+        </a>
+        <div class="d-flex flex-row mb-2 align-items-center">
+            <a href="/edit/{{ el.id }}" class="btn btn-secondary w-100 mx-1" role="button">Редактировать</a>
+            <form class="w-100" action='/delete/{{ el.id }}/' method='post'>
+                {% csrf_token %}
+                <button class="btn btn-danger w-100 mx-1" type='submit' name='delete' value='Delete'>Удалить</button>
+            </form>
         </div>
-    </a>
-    <a href="/delete/{{ el.id }}" class="btn btn-danger" role="button">Удалить</a>
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
 {% if not questions %}
-<h2>У вас ещё нет созданных анкет :(</h2>
+{% if not search %} <h2>У вас ещё нет созданных анкет :(</h2> {% endif %}
+{% if search %} <h2>Ничего не найдено :(</h2> {% endif %}
 {% endif %}
 {% endblock %}

@@ -22,18 +22,64 @@
     <div class="container">
         {% block body %}{% endblock %}
     </div>
+    <style>
+        .wrapper {
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, 300px);
+            gap: 20px;
+            text-align: center;
+        }
+
+        .list-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        a {
+            border: 1px solid rgba(0, 0, 0, .125);
+            border-radius: .25rem;
+            padding: .5rem 1rem;
+            margin: 10px 0;
+            color: #212529;
+            text-decoration: none;
+            transition: .3s;
+        }
+
+        .flex-title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            height: 500px;
+            justify-content: space-around;
+        }
+
+        .flex-title>img {
+            width: 280px;
+            height: 400px;
+            object-fit: cover;
+            border-radius: .25rem;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+    </style>
     <script>
         const pathname = window.location.pathname
         switch (pathname) {
-            case '/':
-                document.querySelector(".nav-link[href='/']").classList.add('active')
-                break
             case '/create':
                 document.querySelector(".nav-link[href='/create']").classList.add('active')
                 break
             case '/profile':
                 document.querySelector(".nav-link[href='/profile']").classList.add('active')
                 break
+        }
+        if (!isNaN(+pathname.slice(1))) {
+            document.querySelector(".nav-link[href='/']").classList.add('active')
         }
     </script>
 </body>

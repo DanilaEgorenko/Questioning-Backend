@@ -1,0 +1,112 @@
+{% extends 'main/template.html' %}
+
+{% block title %}
+Редактирование - {{ question.title }}
+{% endblock %}
+
+{% block body %}
+<h2 class="text-secondary">Редактирование:</h2>
+<div class="row g-3 col-md-7 col-lg-8">
+    <form class="needs-validation" novalidate="" method="post">
+        {% csrf_token %}
+        {{ form.title }}
+        {{ form.preview }}
+        <div class="row g-5">
+
+            <button class="btn-blocks w-100 btn btn-primary btn-lg" type="button">Добавить блок</button>
+
+            {{ form.author }}
+            {{ form.body }}
+
+            <button class="w-100 btn btn-success btn-lg my-3" type="submit">Обновить</button>
+        </div>
+    </form>
+</div>
+<script>
+    document.querySelector('.form-control').value = `{{question.title}}`
+    document.querySelector('.form-control-title').value = `{{question.title}}`
+    document.querySelector('.form-control-preview').value = `{{question.preview}}`
+    document.querySelector('.form-control').classList.add('my-2')
+
+
+    const req = `{{question.body}}`.split('\n')
+    for (let i = 0; i < req.length; i += 2) {
+        const block = document.createElement('div')
+        block.className = 'block'
+        let html = `
+        <hr class="my-4">
+        <input type="text" class="question form-control" value="${req[i]}" required="" minlength="1" maxlength="60"/>
+        <div class="answers">
+            <div class="list-group mx-0">`
+        for (const item of req[i + 1].split('/').filter(Boolean)) {
+            html += `<label class="d-flex gap-2">
+                        <input class="answer form-control" type="text" required="" value="${item}">
+                    </label>`
+        }
+        block.innerHTML += html + `</div><button class="btn-answers w-100 btn btn-outline-primary my-2" type="button">Добавить
+                            ответ</button></div>`
+        document.querySelector('.btn-blocks').before(block)
+    }
+
+    const f = () => [...document.querySelectorAll('.btn-answers')].map(el => {
+        el.addEventListener('click', e => {
+            const block = e.target.closest('.block')
+            const counter = block.querySelectorAll('.answers > .list-group > label').length + 1
+            const ansblock = document.createElement('label')
+            ansblock.className = 'd-flex gap-2'
+            ansblock.innerHTML = `<input type="text" class="answer form-control" placeholder="${counter} ответ" value="" required="">
+            <div class="invalid-feedback">Ответ блока обязателен</div>`
+            block.querySelector('.answers > .list-group').append(ansblock)
+        })
+    })
+    f()
+
+    document.querySelector('.btn-blocks').addEventListener('click', e => {
+        const body = e.target.closest('.row')
+        const block = document.createElement('div')
+        block.className = 'block'
+        block.innerHTML = `<input type="text" class="question form-control" placeholder="Вопрос блока" value="" required="">
+                        <div class="invalid-feedback">
+                            Вопрос блока обязателен
+                        </div>
+                        <div class="answers">
+                            <div class="list-group mx-0">
+                                <label class="d-flex gap-2">
+                                    <input type="text" class="answer form-control" placeholder="1 ответ" value="" required="">
+                                    <div class="invalid-feedback">
+                                        Ответ блока обязателен
+                                    </div>
+                                </label>
+                                <label class="d-flex gap-2">
+                                    <input type="text" class="answer form-control" placeholder="2 ответ" value="" required="">
+                                    <div class="invalid-feedback">
+                                        Ответ блока обязателен
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <button class="btn-answers w-100 btn btn-outline-primary" type="button">Добавить ответ</button>
+                        <hr class="my-4">`
+        document.querySelector('.btn-blocks').before(block)
+        f()
+    })
+
+    document.querySelector('.btn-success').addEventListener('click', e => {
+        e.preventDefault()
+        let value = ''
+        const blocks = [...document.querySelectorAll('.block')]
+
+        blocks.map(block => {
+            value += block.querySelector('.question').value + '\n'
+            const answers = [...block.querySelectorAll('.answer')]
+            answers.map(answer => {
+                value += answer.value + '/'
+            })
+            value += '\n'
+        })
+        document.querySelector('.form-user-data').value = "{{request.user.username}}"
+        document.querySelector('.form-body-data').value = value
+        document.querySelector('form').submit()
+    })
+</script>
+{% endblock %}
